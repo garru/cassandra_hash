@@ -41,5 +41,15 @@ describe 'CassandraHash' do
         end
       end
     end
+    
+    describe '#column_family_name' do
+      it "should use overwritten column family" do
+        Toys.column_family_name.should == 'NotFunToys'
+      end
+      
+      it "should use default column family when none is provided" do
+        User.column_family_name.should == 'User'
+      end
+    end
   end
 end

@@ -3,6 +3,8 @@ module CassandraHash
     class << self
       # make this a class_attr_accessor
       # attr_accessor :connection, :persistence_store, :serializer
+      attr_accessor :repo_name
+      
       def [](key)
         attributes = persistence.get(key)
         new(key, attributes)
@@ -28,6 +30,14 @@ module CassandraHash
       
       def serializer=(serializer)
         @@serializer = serializer
+      end
+      
+      def column_family(column_family)
+        @column_family = column_family 
+      end
+      
+      def column_family_name
+        @column_family || name
       end
     end
 

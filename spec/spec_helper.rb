@@ -10,5 +10,11 @@ Spec::Runner.configure do |config|
     CassandraHash::Base.persistence_store = CassandraHash::MockStore.new
     CassandraHash::Base.serializer = CassandraHash::JSONSerializer.new
     User = Class.new(CassandraHash::Base)
+    Toys = Class.new(CassandraHash::Base)
+  
+    Toys.class_eval do
+      column_family "NotFunToys"
+    end
+  
   end
 end
