@@ -6,17 +6,17 @@ module CassandraHash
       attr_accessor :repo_name
       
       def [](key)
-        attributes = persistence.get(key)
+        attributes = persistence.get(key.to_s)
         new(key, attributes)
       end
 
       def []=(key, attributes)
-        persistence.set(key, attributes)
+        persistence.set(key.to_s, attributes)
       end
       
       def persistence
         @persistance ||= begin 
-          Persistence.new(name, @@persistence_store, serialization)
+          Persistence.new(column_family_name, @@persistence_store, serialization)
         end
       end
       

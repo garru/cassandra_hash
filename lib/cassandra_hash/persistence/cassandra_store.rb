@@ -19,7 +19,7 @@ module CassandraHash
     # @param [String], [String], [EncodedHash]
     # @return [EncodedHash]
     def set(name, key, attributes)
-      @connection.set(name, key, attributes)
+      @connection.insert(name, key, attributes)
     end
   end
 end
