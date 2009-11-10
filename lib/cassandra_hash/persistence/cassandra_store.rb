@@ -1,3 +1,4 @@
+require 'cassandra'
 module CassandraHash
   class CassandraStore
     def initialize(*args)
