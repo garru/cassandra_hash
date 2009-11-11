@@ -1,7 +1,11 @@
 require File.expand_path(File.dirname(__FILE__) + '/spec_helper')
 
 describe 'CassandraHash' do
-  describe 'Base' do
+  describe 'Base' do  
+    before :all do
+      CassandraHash::Base.finder = CassandraHash::Finder.new(CassandraHash::Accessor::MockStore.new)
+    end
+    
     describe '#[]' do
       describe 'when the object does not yet exist' do
         it 'returns an empty object with the key set' do

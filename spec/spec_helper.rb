@@ -6,15 +6,9 @@ require 'spec/autorun'
 
 Spec::Runner.configure do |config|
   config.mock_with :rr
-  config.before :suite do
-    CassandraHash::Base.persistence_store = CassandraHash::MockStore.new
-    CassandraHash::Base.serializer = CassandraHash::JSONSerializer.new
-    User = Class.new(CassandraHash::Base)
-    Toys = Class.new(CassandraHash::Base)
-  
-    Toys.class_eval do
-      column_family "NotFunToys"
-    end
-  
+  User = Class.new(CassandraHash::Base)
+  Toys = Class.new(CassandraHash::Base)  
+  Toys.class_eval do
+    column_family "NotFunToys"
   end
 end

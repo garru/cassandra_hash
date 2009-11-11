@@ -2,34 +2,16 @@ module CassandraHash
   class Base
     class << self
       # make this a class_attr_accessor
-      # attr_accessor :connection, :persistence_store, :serializer
-      attr_accessor :repo_name
-      
       def [](key)
-        attributes = persistence.get(key)
-        new(key, attributes)
+        @@finder.get(self, key)
       end
 
       def []=(key, attributes)
-        persistence.set(key, attributes)
+        @@finder.set(self, key, attributes)
       end
       
-      def persistence
-        @persistance ||= begin 
-          Persistence.new(name, @@persistence_store, serialization)
-        end
-      end
-      
-      def serialization
-        Serialization.new(@@serializer)
-      end
-      
-      def persistence_store=(persistence_store)
-        @@persistence_store = persistence_store
-      end
-      
-      def serializer=(serializer)
-        @@serializer = serializer
+      def finder=(finder)
+        @@finder = finder
       end
       
       def column_family(column_family)
@@ -38,6 +20,10 @@ module CassandraHash
       
       def column_family_name
         @column_family || name
+      end
+      
+      def clear_session
+        @@finder.clear_session
       end
     end
 
