@@ -1,7 +1,7 @@
 module CassandraHash
   class Base
     class << self
-      # make this a class_attr_accessor
+
       def [](key)
         @@finder.get(self, key)
       end
@@ -10,6 +10,11 @@ module CassandraHash
         @@finder.set(self, key, attributes)
       end
       
+      def multi_get(keys)
+        @@finder.get(self, keys)
+      end
+
+      # make these a class_attr_accessor      
       def finder=(finder)
         @@finder = finder
       end
