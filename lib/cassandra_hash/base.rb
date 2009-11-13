@@ -1,5 +1,8 @@
+require 'cassandra_hash/associations'
+
 module CassandraHash
   class Base
+    extend Associations    
     class << self
 
       def [](key)
@@ -37,6 +40,7 @@ module CassandraHash
     def initialize(key, attributes = {})
       @key = key
       self.attributes = attributes.dup
+      @associations = {}
     end
     
     def []=(name, value)
@@ -49,6 +53,9 @@ module CassandraHash
     
     def save
       self.class[@key] = self.attributes
+      @associations.each_pair do |association_name, association_value|
+        association_value.save
+      end
     end
   end
 end

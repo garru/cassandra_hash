@@ -11,4 +11,8 @@ Spec::Runner.configure do |config|
   Toys.class_eval do
     column_family "NotFunToys"
   end
+  
+  User.class_eval do
+    has_one :toys, :class => Toys
+  end
 end
