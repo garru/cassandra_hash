@@ -5,7 +5,7 @@ module CassandraHash
     
       def initialize(decorated, options = {})
         self.decorated = decorated
-        self.repository = options[:respository]
+        self.repository = options[:repository]
         self.namespace = options[:namespace] || ""
       end
     
@@ -20,7 +20,14 @@ module CassandraHash
           end
           hits
         else
-          repository.get(cache_key(klass, keys))
+          attributes = nil
+          begin
+            attributes = repository.get(cache_key(klass, keys)) 
+          rescue Memcached::NotFound 
+            attributes = decorated.get(klass, keys)
+            repository.set(cache_key(klass,keys), attributes)
+          end
+          attributes
         end
       end
   

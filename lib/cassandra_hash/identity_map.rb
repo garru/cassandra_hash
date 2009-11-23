@@ -23,13 +23,15 @@ module CassandraHash
     end
 
     def clear_session
-      Thread.current[:identity_map] ||= {}
-      Thread.current[:identity_map].clear
+      identity_map.clear
     end
     
+    def identity_map
+      Thread.current[:identity_map] ||= {}
+    end
 private
     def fetch(klass, key)
-      name_hash = Thread.current[:identity_map][klass.name] ||= {}
+      name_hash = identity_map[klass.name] ||= {}
       if name_hash.nil? || name_hash[key].nil?
         name_hash[key] = decorated.get(klass,key)
       else

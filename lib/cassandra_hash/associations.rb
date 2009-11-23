@@ -9,6 +9,7 @@ module CassandraHash
         
         def #{association_name}=(attributes)
           #{association_name}.attributes = attributes
+          #{association_name}
         end
        eos
     end

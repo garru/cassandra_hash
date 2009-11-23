@@ -12,6 +12,7 @@ require 'cassandra_hash/serializer/json_serializer'
 require 'cassandra_hash/accessor/abstract'
 require 'cassandra_hash/accessor/mock_store'
 require 'cassandra_hash/accessor/cassandra_store'
+require 'cassandra_hash/accessor/write_through'
 
 module CassandraHash
 end
