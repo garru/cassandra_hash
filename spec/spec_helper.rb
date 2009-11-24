@@ -3,6 +3,8 @@ $LOAD_PATH.unshift(File.join(File.dirname(__FILE__), '..', 'lib'))
 require 'cassandra_hash'
 require 'spec'
 require 'spec/autorun'
+require 'activesupport'
+require 'lib/cache_mock'
 
 Spec::Runner.configure do |config|
   config.mock_with :rr

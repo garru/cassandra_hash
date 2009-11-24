@@ -22,10 +22,10 @@ module CassandraHash
         else
           attributes = nil
           begin
-            attributes = repository.get(cache_key(klass, keys)) 
+            attributes = repository.get(cache_key(klass, keys))
           rescue Memcached::NotFound 
             attributes = decorated.get(klass, keys)
-            repository.set(cache_key(klass,keys), attributes)
+            repository.set(cache_key(klass,keys), attributes) unless attributes.empty?
           end
           attributes
         end

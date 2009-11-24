@@ -39,7 +39,7 @@ module CassandraHash
 
     def initialize(key, attributes = {})
       @key = key
-      self.attributes = attributes.dup
+      self.attributes = attributes.nil? ? attributes : attributes.dup
       @associations = {}
     end
     

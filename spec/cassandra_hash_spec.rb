@@ -28,7 +28,7 @@ describe 'CassandraHash' do
       describe 'when setting the object' do
         it 'should handle Arrays' do 
           attributes = {"name" => "Gary", "birthday" => "June 23", 
-              "comments" => ["blah1", "blah2", "blah3"]}
+              "comments" => ["comment 1", "comment 2", "comment 3"]}
           User['2'] = attributes
           user = User['2']
           user.key.should == '2'
