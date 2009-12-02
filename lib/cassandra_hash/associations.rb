@@ -3,6 +3,7 @@ module CassandraHash
     def has_one(association_name, options = {})
        klass = options[:class]
        self.class_eval <<-eos
+        @@associations["#{association_name}"] ||= true
         def #{association_name}
           @associations["#{association_name}"] ||= #{klass}[key]
         end
