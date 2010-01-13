@@ -42,16 +42,20 @@ private
 
       def expand(encoded_attributes)
         encoded_attributes.inject({}) do |hash, (key, value)|
-          hash[key] = serializer.decode(value)
+          hash[key.to_sym] = serializer.decode(value)
           hash
         end
       end
       
       def rollup(attributes)
         attributes.inject({}) do |hash, (key, value)|
-          hash[key] = serializer.encode(value)
+          hash[key.to_s] = serializer.encode(value)
           hash
         end
+      end
+      
+      def serializer
+        @serializer ||= JSONSerializer.new
       end
     end
   end
