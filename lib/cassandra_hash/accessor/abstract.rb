@@ -19,6 +19,10 @@ module CassandraHash
       def set(klass, key, attributes)
 
       end
+      
+      def delete(klass, key)
+      
+      end
     end
   end
 end

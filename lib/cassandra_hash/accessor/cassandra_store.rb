@@ -1,12 +1,33 @@
 require 'cassandra'
+class Cassandra
+  def closed?
+    false
+  end
+
+  def close
+    raw_client.disconnect!
+    @client = nil
+  end
+end
+
 module CassandraHash
   module Accessor
     class CassandraStore < Abstract
       attr_accessor :serializer
       def initialize(*args)
-        @connection = Cassandra.new(*args)
+        @connection_pool = Pandemic::ConnectionPool.new
+        @connection_pool.create_connection{ Cassandra.new(*args) }
+        @connection_pool.destroy_connection{|c| c.client.disconnect!}
       end
-
+      
+      
+      # def connection_pool
+      #   @connection_pool ||= begin
+      #     processor = ConnectionPool.new
+      #     processor.create_connection { Processor.new(@handler) }
+      #     processor
+      #   end
+      # end
       # Get takes the class name of an object and its key; 
       #      and returns the attributes
   
@@ -17,13 +38,13 @@ module CassandraHash
         case keys
         when Array
           keys = keys.map{|key|keys.to_s}
-          values = @connection.multi_get(name, keys)
+          values = @connection_pool.with_connection{|c| c.multi_get(name, keys)}
           values.inject({}) do |hash, (key, encoded_attributes)|
-            hash[key] = expand(encoded_attributes)
+            hash[key.to_sym] = expand(encoded_attributes)
             hash
           end
         else
-          encoded_attributes = @connection.get(name, keys.to_s)
+          encoded_attributes = @connection_pool.with_connection{|c| c.get(name, keys.to_s)}
           expand(encoded_attributes)
         end        
       end
@@ -35,24 +56,28 @@ module CassandraHash
       # @return [Hash]
       def set(klass, key, attributes)
         name = klass.column_family_name
-        @connection.insert(name, key.to_s, rollup(attributes))
+        @connection_pool.with_connection{|c| c.insert(name, key.to_s, rollup(attributes))}
       end
-
+      
+      def delete(klass, key)
+        @connection_pool.with_connection{|c| c.remove(klass.connection_family_name, key.to_s)}
+      end
 private
 
       def expand(encoded_attributes)
         encoded_attributes.inject({}) do |hash, (key, value)|
-          hash[key] = serializer.decode(value)
+          hash[key.to_sym] = serializer.decode(value)
+          hash
+        end
+      end
+
+      def rollup(attributes)
+        attributes.inject({}) do |hash, (key, value)|
+          hash[key.to_s] = serializer.encode(value)
           hash
         end
       end
       
-      def rollup(attributes)
-        attributes.inject({}) do |hash, (key, value)|
-          hash[key] = serializer.encode(value)
-          hash
-        end
-      end
     end
   end
 end

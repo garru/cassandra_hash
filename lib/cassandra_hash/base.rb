@@ -13,6 +13,10 @@ module CassandraHash
         @@finder.set(self, key, attributes)
       end
       
+      def delete(key)
+        @@finder.delete(self, key)
+      end
+      
       def multi_get(keys)
         @@finder.get(self, keys)
       end
@@ -41,10 +45,11 @@ module CassandraHash
       @key = key
       self.attributes = attributes.nil? ? attributes : attributes.dup
       @associations = {}
+      @dirty_attributes = {}
     end
     
     def []=(name, value)
-      self.attributes[name] = value
+      @dirty_attributes[name] = self.attributes[name] = value
     end
 
     def [](name)

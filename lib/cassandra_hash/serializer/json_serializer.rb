@@ -2,18 +2,15 @@ require 'json'
 module CassandraHash
   class JSONSerializer
     def encode(attribute)
-      if attribute.is_a?(String) || attribute.is_a?(Numeric)
-        attribute
-      else
-        attribute.to_json
-      end
+      attribute.to_json
     end
     
     def decode(attribute)
       begin
         JSON.parse(attribute)
       rescue ::JSON::ParserError
-        attribute
+        attri = JSON.parse("\{\"a\"\:#{attribute}}")
+        attri["a"]
       end
     end
   end

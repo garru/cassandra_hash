@@ -36,6 +36,10 @@ module CassandraHash
         repository.set(cache_key(klass, key), attributes)
       end
 
+      def delete(klass, key)
+        decorated.delete(klass, key)
+        repository.delete(cache_key(klass, key))
+      end
   private
     
       def cache_key(klass, key)
