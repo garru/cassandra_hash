@@ -78,6 +78,9 @@ private
         end
       end
       
+      def serializer
+        @serializer ||= JSONSerializer.new
+      end
     end
   end
 end
